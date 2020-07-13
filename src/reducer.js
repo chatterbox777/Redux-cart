@@ -6,10 +6,27 @@ export function reducer(state = initialState, action) {
     return { ...state, cart: [], amount: 0 };
   }
   if (action.type === DECREASE) {
-    console.log("DECREASED AMOUNT");
+    let tempCart = [];
+    if (action.payLoad.amount === 1) {
+      tempCart = state.cart.filter((item) => item.id !== action.payLoad.id);
+    } else {
+      tempCart = state.cart.map((item) => {
+        if (item.id === action.payLoad.id) {
+          item = { ...item, amount: item.amount - 1 };
+        }
+        return item;
+      });
+    }
+    return { ...state, cart: tempCart };
   }
   if (action.type === INCREASE) {
-    console.log("INCREASED AMOUNT");
+    let tempCart = state.cart.map((item) => {
+      if (item.id === action.payLoad.id) {
+        item = { ...item, amount: item.amount + 1 };
+      }
+      return item;
+    });
+    return { ...state, cart: tempCart };
   }
   if (action.type === REMOVE) {
     return {
