@@ -1,39 +1,24 @@
-import { initialState } from "./App";
 import {
   INCREASE,
   DECREASE,
   CLEAR_CART,
   REMOVE,
   GET_TOTALS,
+  TOGGLE_AMOUNT,
 } from "./components/actions";
+import cartItems from "./cart-items";
+
+const initialState = {
+  cart: cartItems,
+  total: 0,
+  amount: 0,
+};
 
 export function reducer(state = initialState, action) {
   if (action.type === CLEAR_CART) {
     return { ...state, cart: [], amount: 0 };
   }
-  if (action.type === DECREASE) {
-    let tempCart = [];
-    if (action.payLoad.amount === 1) {
-      tempCart = state.cart.filter((item) => item.id !== action.payLoad.id);
-    } else {
-      tempCart = state.cart.map((item) => {
-        if (item.id === action.payLoad.id) {
-          item = { ...item, amount: item.amount - 1 };
-        }
-        return item;
-      });
-    }
-    return { ...state, cart: tempCart };
-  }
-  if (action.type === INCREASE) {
-    let tempCart = state.cart.map((item) => {
-      if (item.id === action.payLoad.id) {
-        item = { ...item, amount: item.amount + 1 };
-      }
-      return item;
-    });
-    return { ...state, cart: tempCart };
-  }
+
   if (action.type === REMOVE) {
     return {
       ...state,
@@ -57,6 +42,22 @@ export function reducer(state = initialState, action) {
       ...state,
       amount: amount,
       total: total,
+    };
+  }
+  if (action.type === TOGGLE_AMOUNT) {
+    return {
+      ...state,
+      cart: state.cart.map((cartItem) => {
+        if (cartItem.id === action.payLoad.id) {
+          if (action.payLoad.toggle === "inc") {
+            return (cartItem = { ...cartItem, amount: cartItem.amount + 1 });
+          }
+          if (action.payLoad.toggle === "dec") {
+            return (cartItem = { ...cartItem, amount: cartItem.amount - 1 });
+          }
+        }
+        return cartItem;
+      }),
     };
   }
   return state;
