@@ -1,5 +1,11 @@
 import { initialState } from "./App";
-import { INCREASE, DECREASE, CLEAR_CART, REMOVE } from "./components/actions";
+import {
+  INCREASE,
+  DECREASE,
+  CLEAR_CART,
+  REMOVE,
+  GET_TOTALS,
+} from "./components/actions";
 
 export function reducer(state = initialState, action) {
   if (action.type === CLEAR_CART) {
@@ -33,6 +39,24 @@ export function reducer(state = initialState, action) {
       ...state,
       cart: state.cart.filter((item) => item.id !== action.payLoad.id),
       amount: state.cart.length - 1,
+    };
+  }
+  if (action.type === GET_TOTALS) {
+    let { total, amount } = state.cart.reduce(
+      (cartTotal, cartItem) => {
+        const { price, amount } = cartItem;
+        const itemTotal = price * amount;
+        cartTotal.amount += amount;
+        cartTotal.total += itemTotal;
+        return cartTotal;
+      },
+      { total: 0, amount: 0 }
+    );
+    total = parseFloat(total.toFixed(2));
+    return {
+      ...state,
+      amount: amount,
+      total: total,
     };
   }
   return state;

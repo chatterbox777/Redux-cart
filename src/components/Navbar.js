@@ -19,7 +19,7 @@ const Navbar = ({ amount }) => {
 };
 const mapStateToProps = (state) => {
   console.log(state);
-  return { amount: state.cart.length };
+  return { amount: state.amount };
 };
 
 export default connect(mapStateToProps)(Navbar);
